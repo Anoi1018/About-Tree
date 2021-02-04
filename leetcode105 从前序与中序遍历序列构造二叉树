@@ -17,15 +17,39 @@
 
 代码示意：
 递归
+前序遍历：根左右
+
+中序遍历：左根右
+
+我们通过前序遍历可以知道二叉树的根
+知道二叉树的根，根据中序遍历，我们可以知道根的左右子树的中序遍历及左右子树节点数目
+知道左右子树的节点数目，结合前序遍历，我们就知道左右子树的前序遍历
+
 var buildTree = function(preorder, inorder) {
      if(preorder.length===0 || inorder.length===0) return null;
      let root = new TreeNode(preorder.shift());
      let index = inorder.indexOf(root.val);
      let leftTree = inorder.slice(0,index);
      let rightTree = inorder.slice(index+1);
-     root.left = buildTree(preorder,leftTree)
+     root.left = buildTree(preorder,leftTree) -->可以优化左右子树的前序遍历数组
      root.right = buildTree(preorder,rightTree);
      return root;
 };
+
+改进后：
+var buildTree = function(preorder, inorder) {
+    if(!preorder.length) return null;
+    let node = new TreeNode(preorder[0]);
+    let index = inorder.indexOf(preorder[0]);
+    let inLeft = inorder.slice(0,index); -->别少了let 哦
+    
+    let inRight = inorder.slice(index+1);
+    let preLeft = preorder.slice(1,index+1);
+    let preRight = preorder.slice(index+1);
+    node.left = buildTree(preLeft,inLeft);
+    node.right = buildTree(preRight,inRight);
+    return node;
+};
+
 
 
