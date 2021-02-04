@@ -1,0 +1,52 @@
+给定一个二叉树的根节点 root ，返回它的 中序 遍历。
+
+代码示意：
+一、递归：
+var inorderTraversal = function(root) {
+    const ans = [];
+    var inorderTraversalNode = function(node){
+        if(node){
+            inorderTraversalNode(node.left);
+            ans.push(node.val);
+            inorderTraversalNode(node.right);
+        }
+    }
+    inorderTraversalNode(root);
+    return ans;
+};
+二、迭代：
+方法一：模拟手动遍历过程
+var inorderTraversal = function(root) {
+    const stack = [],ans = [];
+    let node = root;
+    while(stack.length || node){
+          while(node){
+              stack.push(node);
+              node = node.left;
+          }
+          while(stack.length){
+              let curNode = stack.pop();
+              ans.push(curNode.val);
+              if(curNode.right){
+                  node = curNode.right;
+                  break;
+              }
+          }
+    }
+    return ans;
+};
+方法二：从根节点开始 左子树入栈 然后左子树根节点出栈结束 右子树入栈出栈
+var inorderTraversal = function(root) {
+   let ans = [],stack =[],node = root;
+   while(node || stack.length){
+       while(node){
+           stack.push(node);
+           node = node.left;
+       }
+       node= stack.pop();
+       ans.push(node.val);
+       node = node.right;
+   }
+   return ans;
+};
+
