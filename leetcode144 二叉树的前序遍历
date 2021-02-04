@@ -1,0 +1,73 @@
+给你二叉树的根节点 root ，返回它节点值的 前序 遍历。
+
+ 代码示意：
+ 一、递归 -->内部用栈实现 先取根节点 再对左子树进行前序遍历返回结果数组 在对右子树进行前序遍历返回数组结果 按照根 左 右的顺序放入结果数组中
+ 时间复杂度O（n） 空间复杂度O（logn）
+ var preorderTraversal = function(root) {
+    let ans = [];
+    if(root === null) return ans;
+    let ansLeft = preorderTraversal(root.left);
+    let ansRight = preorderTraversal(root.right);
+    ans = [root.val,...ansLeft,...ansRight];
+    return ans;
+};
+
+或者：
+var preorderTraversal = function(root) {
+    let ans = [];
+    var preorderTraversalNode = function(node){
+        if(node){
+            ans.push(node.val);
+            preorderTraversalNode(node.left);
+            preorderTraversalNode(node.right);
+        }
+    }
+    preorderTraversalNode(root);
+    return ans;
+};
+二、迭代 -->用栈的出入节点操作来模拟节点前序遍历的过程 相当于递归算法的内部实现
+时间复杂度：O（n）
+空间复杂度：O（n）
+方法一：按照正常思维模式 从根节点遍历到左节点的末尾 然后考虑右子树
+var preorderTraversal = function(root) {
+    let ans = [];
+    if(root === null) return ans;
+    let node = root,stack=[];
+    stack.push(node);
+    ans.push(node.val);
+    while(stack.length!==0 && node){
+        node = node.left;
+        if(!node){ //2.左节点末尾遍历完成 
+            while(stack.length){
+                let right = stack[stack.length-1].right; //2.直到栈顶元素存在右节点
+                if(right){
+                    node = right; //3.则从右节点开始 新一轮的左节点遍历
+                    stack[stack.length-1].right = null; //一定要注意  当前栈顶元素的右节点right已经遍历使用过 所以将当前栈顶元素的右节点赋值为null避免重复使用
+                    break; 
+                }  
+                stack.pop();
+            }
+        }
+        if(!node) break; //没有可以遍历的节点了 跳出循环
+        stack.push(node); //1.从根节点开始 一直遍历到左节点的末尾 
+        ans.push(node.val);    
+    }
+    return ans;
+方法二：先将根节点入栈然后出栈 将节点值放入结果数组中 再将右子树入栈 左子树入栈 从而实现先打印左子树 再打印右子树
+var preorderTraversal = function(root) {
+    const list = [];
+    const stack = [];
+    if(root) stack.push(root); //先将根节点入栈
+    while(stack.length){
+        let curNode = stack.pop(); //根节点出栈
+        list.push(curNode.val); //将根节点值放入结果数组
+        
+        if(curNode.right){ //先遍历右节点 将存在的右节点压入栈
+            stack.push(curNode.right);
+        }
+        if(curNode.left){ //后将左节点压入栈 实现左边根节点的先出栈
+            stack.push(curNode.left);
+        }
+    }
+    return list;
+};
