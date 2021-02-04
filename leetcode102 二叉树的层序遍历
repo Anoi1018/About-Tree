@@ -17,6 +17,7 @@
 ]
 
 代码示意：
+一、两个数组queue和arr同步操作 实现当前层节点的入队和节点值的入队
 var levelOrder = function(root) {
     let ans = [],queue= [],prev = [],arr=[],node = root;
     if(!node) return ans;
@@ -40,3 +41,37 @@ var levelOrder = function(root) {
     }
     return ans;
 };
+二、更加规范的广度优先遍历（迭代）
+var levelOrder = function(root) {
+    if(!root) return [];
+    let node = root,ans = [],queue = [node];
+    
+    while(queue.length){ 
+        let cur = []; //记录当前层queue的节点的值
+        let temp = []; //用来存放下一层节点
+        while(queue.length){
+            node = queue.shift(); //执行头部出队操作
+            cur.push(node.val);
+            if(node.left) temp.push(node.left);
+            if(node.right) temp.push(node.right);
+        }  
+        ans.push(cur);
+        queue = temp;
+    }
+    return ans;
+};
+三、活用深度优先遍历(递归)
+var levelOrder = function(root) {
+    if(!root) return [];
+    let ans = [];
+    var dep = function(node,depth){
+        if(!node) return ;
+        ans[depth] = ans[depth]?ans[depth] : [];
+        ans[depth].push(node.val);
+        dep(node.left,depth+1);
+        dep(node.right,depth+1);
+    }
+    dep(root,0);
+    return ans;
+};
+
