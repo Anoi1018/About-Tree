@@ -1,0 +1,31 @@
+输入某二叉树的前序遍历和中序遍历的结果，请重建该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。
+
+注意:
+你可以假设树中没有重复的元素。
+
+例如，给出
+
+前序遍历 preorder = [3,9,20,15,7]
+中序遍历 inorder = [9,3,15,20,7]
+返回如下的二叉树：
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+
+代码示意：
+递归
+var buildTree = function(preorder, inorder) {
+     if(preorder.length===0 || inorder.length===0) return null;
+     let root = new TreeNode(preorder.shift());
+     let index = inorder.indexOf(root.val);
+     let leftTree = inorder.slice(0,index);
+     let rightTree = inorder.slice(index+1);
+     root.left = buildTree(preorder,leftTree)
+     root.right = buildTree(preorder,rightTree);
+     return root;
+};
+
+
