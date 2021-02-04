@@ -1,0 +1,36 @@
+给定一个二叉树，返回它的 后序 遍历。
+
+代码示意：
+一、递归：
+var postorderTraversal = function(root) {
+    let ans = [];
+    var postorderTraversalNode = function(node){
+        if(node){
+            postorderTraversalNode(node.left);
+            postorderTraversalNode(node.right);
+            ans.push(node.val);
+        }
+    }
+    postorderTraversalNode(root);
+    return ans;
+};
+二、迭代：
+var postorderTraversal = function(root) {
+    let ans = [],stack=[],node = root;
+    while(node || stack.length){
+        while(node){
+            stack.push(node);
+            node = node.left;
+        }
+        while(stack.length){
+            right = stack[stack.length-1].right;
+            if(right){
+                node = right;
+                stack[stack.length-1].right = null;
+                break;
+            }
+            ans.push(stack.pop().val)   
+        }
+    }
+    return ans;
+};
