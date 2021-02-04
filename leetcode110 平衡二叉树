@@ -1,0 +1,46 @@
+给定一个二叉树，判断它是否是高度平衡的二叉树。
+
+本题中，一棵高度平衡二叉树定义为：
+一个二叉树每个节点 的左右两个子树的高度差的绝对值不超过 1 。
+
+ 
+示例 1：
+输入：root = [3,9,20,null,null,15,7]
+输出：true
+
+示例 2：
+输入：root = [1,2,2,3,3,null,null,4,4]
+输出：false
+
+示例 3：
+输入：root = []
+输出：true
+
+代码示意：
+var maxDepth = function(node){
+    if(!node) return 0;
+    let left=maxDepth(node.left);
+    let right = maxDepth(node.right);
+    return 1 + Math.max(left,right);
+}
+var heightDiff = function(node){
+    if(!node) return 0;
+    let maxLeft = maxDepth(node.left);
+    let maxRight = maxDepth(node.right);
+    return Math.abs(maxLeft-maxRight)<=1;
+}
+var isBalanced = function(root) {
+    if(!root) return true;
+    let queue=[root];
+    while(queue.length){
+        let temp = [];
+        while(queue.length){
+            let node = queue.shift();
+            if(!heightDiff(node)) return false;
+            if(node.left) temp.push(node.left);
+            if(node.right) temp.push(node.right);
+        }
+        queue = temp;
+    }
+    return true;
+};
