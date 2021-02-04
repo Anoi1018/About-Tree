@@ -1,0 +1,42 @@
+给你一个二叉树，请你返回其按 层序遍历 得到的节点值。 （即逐层地，从左到右访问所有节点）。 
+
+示例：
+二叉树：[3,9,20,null,null,15,7] ,
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+返回其层次遍历结果：
+
+[
+  [3],
+  [9,20],
+  [15,7]
+]
+
+代码示意：
+var levelOrder = function(root) {
+    let ans = [],queue= [],prev = [],arr=[],node = root;
+    if(!node) return ans;
+    queue.push(node);
+    arr.push(node.val);
+    while(queue.length){
+        ans.push(arr);
+        prev = queue;
+        queue = [];
+        arr=[];
+        for(let node of prev){
+            if(node.left){
+                queue.push(node.left);
+                arr.push(node.left.val);
+            }
+            if(node.right){
+                queue.push(node.right);
+                arr.push(node.right.val);
+            } 
+        }  
+    }
+    return ans;
+};
