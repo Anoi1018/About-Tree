@@ -70,7 +70,7 @@ var isBalanced = function(root) {
     if(!root || (!root.left && !root.right)) return true;
     return isBalancedHelper(root) !==-1;
 };
-var isBalancedHelper = function(node){
+var isBalancedHelper = function(node){                                 -->这个函数实现了判定当前节点为根节点的子树是否是平衡树的功能 不是则返回-1 是则返回当前子树的最大深度
     if(!node) return 0; //注意node为空 则表示平衡 返回当前节点最大深度为0
     let left = isBalancedHelper(node.left);
     let right = isBalancedHelper(node.right);
