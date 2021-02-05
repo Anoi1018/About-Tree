@@ -17,6 +17,8 @@
 输出：true
 
 代码示意：
+一、广度优先搜索来遍历二叉树每个节点 构造两个辅助函数 一个用于计算当前节点的最深高度 一个用于计算当前节点的左右子树高度差
+存在关于maxDepth的冗余计算
 var maxDepth = function(node){
     if(!node) return 0;
     let left=maxDepth(node.left);
@@ -44,3 +46,34 @@ var isBalanced = function(root) {
     }
     return true;
 };
+二、自定向下（暴力法）
+解题思路： 自顶向下的比较每个节点的左右子树的最大高度差，如果二叉树中每个节点的左右子树最大高度差小于等于 1 ，即每个子树都平衡时，此时二叉树才是平衡二叉树
+时间复杂度：O（nlogn） 空间复杂度O（n）
+var isBalanced = function(root) {
+    if(!root || (!root.left && !root.right)) return true;
+    let heightDiff  = Math.abs(maxDepth(root.left)-maxDepth(root.right));
+    return heightDiff<=1 && isBalanced(root.left) && isBalanced(root.right);
+};
+var maxDepth = function(node){
+    if(!node) return 0;
+    return 1 + Math.max(maxDepth(node.left),maxDepth(node.right));
+}
+三、自底向上（优化）
+解题思路： 利用后续遍历二叉树（左右根），从底至顶返回子树最大高度，判定每个子树是不是平衡树 ，如果平衡，则使用它们的高度判断父节点是否平衡，并计算父节点的高度，如果不平衡，返回 -1 。
+
+遍历比较二叉树每个节点 的左右子树深度：
+比较左右子树的深度，若差值大于 1 则返回一个标记 -1 ，表示当前子树不平衡
+左右子树有一个不是平衡的，或左右子树差值大于 1 ，则二叉树不平衡
+若左右子树平衡，返回当前树的深度（左右子树的深度最大值 +1 ）
+
+var isBalanced = function(root) {
+    if(!root || (!root.left && !root.right)) return true;
+    return isBalancedHelper(root) !==-1;
+};
+var isBalancedHelper = function(node){
+    if(!node) return 0; //注意node为空 则表示平衡 返回当前节点最大深度为0
+    let left = isBalancedHelper(node.left);
+    let right = isBalancedHelper(node.right);
+    if(left===-1 || right===-1 || Math.abs(left-right)>1) return -1;
+    return 1 + Math.max(left,right);
+}
