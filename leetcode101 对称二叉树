@@ -1,0 +1,89 @@
+给定一个二叉树，检查它是否是镜像对称的。
+
+例如，二叉树 [1,2,2,3,4,4,3] 是对称的。
+
+    1
+   / \
+  2   2
+ / \ / \
+3  4 4  3
+但是下面这个 [1,2,2,null,3,null,3] 则不是镜像对称的:
+
+    1
+   / \
+  2   2
+   \   \
+   3    3
+进阶：
+
+你可以运用递归和迭代两种方法解决这个问题吗？
+
+代码示意：
+一、递归：
+var isSymmetric = function(root) {
+    if(!root) return true;
+    return isSymmetricHelper(root.left,root.right);  
+};
+var isSymmetricHelper = function(node1,node2){
+    if(!node1 && !node2) return true;
+    if((!node1 && node2)||(node1 && !node2)) return false;
+    if(node1.val !== node2.val) return false;
+    let b1 = isSymmetricHelper(node1.left,node2.right);
+    let b2=false;
+    if(b1)  b2 = isSymmetricHelper(node1.right,node2.left);
+    return b2;
+}
+二、迭代：
+1、用队列实现迭代 (层序遍历得到每一层节点值 双指针判断该层节点是否对称)
+var isSymmetric = function(root) {
+    if(!root) return true;
+    let node =root,queue=[node];
+
+    while(queue.length){
+        let temp = []; --》temp存放节点
+        let tempValue = []; -》tempValue存放节点值
+        while(queue.length){
+            node = queue.shift();
+            if(node.left){
+                temp.push(node.left);
+                tempValue.push(node.left.val);
+            }else{
+                tempValue.push('#'); --》当不存在节点时 用#来标识节点值不存在
+            }
+            if(node.right){
+                temp.push(node.right);
+                tempValue.push(node.right.val);  
+            }else{
+                tempValue.push('#');
+            }
+        }
+        let left =0,right=tempValue.length-1;
+        while(left<right) {
+            if(tempValue[left++]!==tempValue[right--]) return false;
+        }
+        queue = temp;
+    }
+    return true;     
+};
+2、用栈来实现迭代
+相当于用栈来模拟递归法的内部实现
+var isSymmetric = function(root) {
+    if(!root) return true;
+    let stack = [root.left,root.right];
+    while(stack.length){
+        let right = stack.pop();  -->此处的null是作为空节点的引用 可以出入stack
+        let left = stack.pop();
+        if(left && right){
+            if(left.val!==right.val) return false;
+            stack.push(left.left);   -->null节点的left right为undefined 不能入栈 
+            stack.push(right.right);
+            stack.push(left.right);
+            stack.push(right.left);
+        }else if(left || right){
+            return false;
+        }
+    }
+    return true;   
+};
+
+
