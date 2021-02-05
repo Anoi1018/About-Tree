@@ -1,7 +1,11 @@
 给定一个二叉搜索树的根节点 root ，和一个整数 k ，请你设计一个算法查找其中第 k 个最小元素（从 1 开始计数）。
 
+进阶：如果二叉搜索树经常被修改（插入/删除操作）并且你需要频繁地查找第 k 小的值，你将如何优化算法？
+
+
 代码示意：
-一、中序遍历得到顺序数组 返回第k个元素
+中序遍历得到顺序数组 返回第k个元素
+一、中序遍历-递归 
 时间复杂度：O（n）
 空间复杂度：O（n）
 var kthSmallest = function(root, k) {
@@ -16,6 +20,18 @@ var inorderTraversal = function(root,arr){
     }
     return arr;
 }
-
-进阶：如果二叉搜索树经常被修改（插入/删除操作）并且你需要频繁地查找第 k 小的值，你将如何优化算法？
-二、
+二、中序遍历-迭代
+var kthSmallest = function(root, k) {
+   let ans = [],stack =[],node = root;
+   while(node || stack.length){
+       while(node){
+           stack.push(node);
+           node = node.left;
+       }
+       node= stack.pop();
+       ans.push(node.val);
+       if(ans.length===k) break;
+       node = node.right;
+   }
+   return ans[k-1];
+};
